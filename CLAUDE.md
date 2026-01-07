@@ -1,10 +1,10 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working with this repository.
 
 ## Overview
 
-This is an API tester template built with Bun + React 19 + Tailwind 4 + shadcn/ui. It serves as a starting point for building API testing tools with a modern frontend stack.
+Star Wars Explorer - A demo frontend built with Bun + React 19 + Zustand + Ky + Tailwind 4 + shadcn/ui. Fetches data from the Star Wars API (SWAPI) at https://swapi.py4e.com/api/.
 
 ## Commands
 
@@ -13,49 +13,66 @@ bun install          # Install dependencies
 bun dev              # Dev server with HMR at http://localhost:3000
 bun start            # Production server
 bun run build.ts     # Production build to dist/
-bun test             # Run tests
 ```
 
 ## Architecture
 
 ### Server (`src/index.ts`)
-Uses `Bun.serve()` with HTML imports (no Express, no Vite):
-- Routes defined in `routes` object with method handlers
-- HTML files imported directly and served
+Uses `Bun.serve()` with HTML imports:
+- Routes defined in `routes` object
 - HMR enabled in development via `development.hmr`
 
 ### Frontend Entry
 - `src/index.html` → loads `src/frontend.tsx`
-- `src/frontend.tsx` → renders `src/App.tsx` with HMR support
-- `src/App.tsx` → main app component with `APITester`
+- `src/frontend.tsx` → renders `src/App.tsx`
+- `src/App.tsx` → main app with all components
+
+### API Layer (`src/lib/api.ts`)
+- Ky HTTP client configured for SWAPI
+- TypeScript interfaces for all resource types (Person, Planet, Film, etc.)
+- Functions: `fetchResource`, `fetchByUrl`, `searchResource`, `searchAllResources`
+
+### State Management (`src/store/swapi.ts`)
+Zustand store with persist middleware:
+- `currentResource` - active tab (people, planets, films, etc.)
+- `page`, `itemsPerPage` - pagination state
+- `globalSearchQuery/Results` - search state
+- `cache`, `apiPageCache` - localStorage cached API responses
+- Handles multi-page fetching (SWAPI returns 10 per page, app shows 24)
+
+### URL State Sync (`src/App.tsx`)
+Query parameters sync with app state:
+- `?type=planets` - resource type
+- `?page=2` - pagination
+- `?q=luke` - search query
+- `?detail=people/1` - detail view
 
 ### Styling
-- Tailwind 4 with shadcn/ui (new-york style)
-- `styles/globals.css` → shadcn theme variables and Tailwind imports
-- `src/index.css` → app-specific styles, imports globals.css
-- `src/lib/utils.ts` → `cn()` utility for class merging
+- Tailwind 4 with shadcn/ui (new-york style, dark theme only)
+- `styles/globals.css` → theme variables
+- `src/index.css` → animated star background
 
 ### UI Components (`src/components/ui/`)
-shadcn/ui components installed via `bunx shadcn@latest add <component>`. Uses `@/` path alias mapped to `./src/*`.
+shadcn/ui components: button, card, input, select, tabs, badge, skeleton, dialog
+
+## Key Patterns
+
+### Stale Response Detection
+Async fetches capture current state, check if state changed before updating:
+```ts
+const fetchingResource = currentResource;
+// ... await fetch ...
+if (get().currentResource !== fetchingResource) return; // abort if stale
+```
+
+### Expandable Badges
+Badges show related entity counts. Clicking expands to show names (fetched and cached). Clicking names opens detail modal.
+
+### Detail View
+Single entity view with full expandable badges. Accessed via modal "view full" link or direct URL.
 
 ## Bun Preferences
 
 - `Bun.serve()` for HTTP (not Express)
-- `bun:sqlite` for SQLite (not better-sqlite3)
 - `Bun.file` for file I/O (not node:fs)
-- `Bun.$` for shell commands (not execa)
-- Auto-loads `.env` files (no dotenv)
-
-## Adding API Routes
-
-Add routes in `src/index.ts`:
-```ts
-"/api/endpoint": {
-  GET: (req) => Response.json({ data: "value" }),
-  POST: async (req) => {
-    const body = await req.json();
-    return Response.json({ received: body });
-  },
-},
-"/api/endpoint/:param": (req) => Response.json({ param: req.params.param }),
-```
+- Auto-loads `.env` files (no dotenv needed)
