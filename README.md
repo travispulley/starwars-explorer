@@ -2,9 +2,14 @@
 
 A demo frontend application showcasing Bun, React 19, Zustand, Ky, and shadcn/ui by interfacing with the [Star Wars API (SWAPI)](https://swapi.py4e.com/).
 
+## Live Demo
+
+Visit https://travispulley.github.io/starwars-explorer
+
 ## Configuration
 
-The port it runs on (3000 by default) can be set in .env (see .env.sample) and the base url for SWAPI is set as SWAPI_BASE in lib/api.ts
+- The port it runs on (3000 by default) can be set in .env (see .env.sample) 
+- The base url for SWAPI is set as SWAPI_BASE in lib/api.ts
 
 ## Features
 
