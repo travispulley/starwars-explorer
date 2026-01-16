@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Search, X, ArrowLeft } from "lucide-react";
+import { Search, X, ArrowLeft, Github } from "lucide-react";
 import { ResourceCard, resourceIcons } from "@/components/ResourceCard";
 import { Pagination } from "@/components/Pagination";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
@@ -400,6 +400,15 @@ export function App() {
           <a href="https://github.com/sindresorhus/ky" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">Ky</a>, and{" "}
           <a href="https://ui.shadcn.com/" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">shadcn/ui</a>
         </p>
+        <a
+          href="https://github.com/travispulley/starwars-explorer"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 underline hover:text-foreground transition-colors"
+        >
+          <Github className="w-3.5 h-3.5" />
+          GitHub
+        </a>
       </footer>
     </div>
   );

@@ -12,6 +12,25 @@ import {
   type Starship,
 } from "@/lib/api";
 
+const dateFmt = new Intl.DateTimeFormat("en-US", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+function formatDate(dateString: string): string {
+  return dateFmt.format(new Date(dateString));
+}
+
+function formatNumber(value: string | number): string {
+  const raw = typeof value === "string" ? value.trim().replace(/,/g, "") : value;
+  const num = typeof raw === "number" ? raw : Number(raw);
+
+  if (!Number.isFinite(num)) return String(value);
+
+  return num.toLocaleString("en-US");
+}
+
 export const resourceIcons: Record<ResourceType, React.ReactNode> = {
   people: <Users className="w-4 h-4" />,
   planets: <Globe className="w-4 h-4" />,
@@ -34,7 +53,7 @@ function PersonCard({ person, disableBadges = false, onViewFull }: CardProps<Per
           <Users className="w-5 h-5 text-yellow-500" />
           {person.name}
           {onViewFull && (
-            <button onClick={onViewFull} className="text-muted-foreground hover:text-foreground transition-colors" title="View full details">
+            <button onClick={onViewFull} className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors" title="View full details">
               <ExternalLink className="w-3.5 h-3.5" />
             </button>
           )}
@@ -43,8 +62,8 @@ function PersonCard({ person, disableBadges = false, onViewFull }: CardProps<Per
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-2 text-sm">
-          <div><span className="text-muted-foreground">Height:</span> {person.height}cm</div>
-          <div><span className="text-muted-foreground">Mass:</span> {person.mass}kg</div>
+          <div><span className="text-muted-foreground">Height:</span> {formatNumber(person.height)}cm</div>
+          <div><span className="text-muted-foreground">Mass:</span> {formatNumber(person.mass)}kg</div>
           <div><span className="text-muted-foreground">Hair:</span> {person.hair_color}</div>
           <div><span className="text-muted-foreground">Eyes:</span> {person.eye_color}</div>
         </div>
@@ -66,7 +85,7 @@ function PlanetCard({ planet, disableBadges = false, onViewFull }: CardProps<Pla
           <Globe className="w-5 h-5 text-blue-500" />
           {planet.name}
           {onViewFull && (
-            <button onClick={onViewFull} className="text-muted-foreground hover:text-foreground transition-colors" title="View full details">
+            <button onClick={onViewFull} className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors" title="View full details">
               <ExternalLink className="w-3.5 h-3.5" />
             </button>
           )}
@@ -76,8 +95,8 @@ function PlanetCard({ planet, disableBadges = false, onViewFull }: CardProps<Pla
       <CardContent>
         <div className="grid grid-cols-2 gap-2 text-sm">
           <div><span className="text-muted-foreground">Terrain:</span> {planet.terrain}</div>
-          <div><span className="text-muted-foreground">Population:</span> {planet.population}</div>
-          <div><span className="text-muted-foreground">Diameter:</span> {planet.diameter}km</div>
+          <div><span className="text-muted-foreground">Population:</span> {formatNumber(planet.population)}</div>
+          <div><span className="text-muted-foreground">Diameter:</span> {formatNumber(planet.diameter)}km</div>
           <div><span className="text-muted-foreground">Gravity:</span> {planet.gravity}</div>
         </div>
         <div className="flex flex-wrap gap-2 mt-3">
@@ -97,12 +116,12 @@ function FilmCard({ film, disableBadges = false, onViewFull }: CardProps<Film> &
           <FilmIcon className="w-5 h-5 text-red-500" />
           {film.title}
           {onViewFull && (
-            <button onClick={onViewFull} className="text-muted-foreground hover:text-foreground transition-colors" title="View full details">
+            <button onClick={onViewFull} className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors" title="View full details">
               <ExternalLink className="w-3.5 h-3.5" />
             </button>
           )}
         </CardTitle>
-        <CardDescription>Episode {film.episode_id} - {film.release_date}</CardDescription>
+        <CardDescription>Episode {film.episode_id} - {formatDate(film.release_date)}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="text-sm mb-2">
@@ -130,7 +149,7 @@ function SpeciesCard({ species, disableBadges = false, onViewFull }: CardProps<S
           <Bug className="w-5 h-5 text-green-500" />
           {species.name}
           {onViewFull && (
-            <button onClick={onViewFull} className="text-muted-foreground hover:text-foreground transition-colors" title="View full details">
+            <button onClick={onViewFull} className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors" title="View full details">
               <ExternalLink className="w-3.5 h-3.5" />
             </button>
           )}
@@ -139,8 +158,8 @@ function SpeciesCard({ species, disableBadges = false, onViewFull }: CardProps<S
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-2 text-sm">
-          <div><span className="text-muted-foreground">Avg Height:</span> {species.average_height}cm</div>
-          <div><span className="text-muted-foreground">Lifespan:</span> {species.average_lifespan}yrs</div>
+          <div><span className="text-muted-foreground">Avg Height:</span> {formatNumber(species.average_height)}cm</div>
+          <div><span className="text-muted-foreground">Lifespan:</span> {formatNumber(species.average_lifespan)}yrs</div>
           <div><span className="text-muted-foreground">Language:</span> {species.language}</div>
           <div><span className="text-muted-foreground">Eyes:</span> {species.eye_colors}</div>
         </div>
@@ -161,7 +180,7 @@ function VehicleCard({ vehicle, disableBadges = false, onViewFull }: CardProps<V
           <Car className="w-5 h-5 text-orange-500" />
           {vehicle.name}
           {onViewFull && (
-            <button onClick={onViewFull} className="text-muted-foreground hover:text-foreground transition-colors" title="View full details">
+            <button onClick={onViewFull} className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors" title="View full details">
               <ExternalLink className="w-3.5 h-3.5" />
             </button>
           )}
@@ -172,12 +191,12 @@ function VehicleCard({ vehicle, disableBadges = false, onViewFull }: CardProps<V
         <div className="grid grid-cols-2 gap-2 text-sm">
           <div><span className="text-muted-foreground">Class:</span> {vehicle.vehicle_class}</div>
           <div><span className="text-muted-foreground">Manufacturer:</span> {vehicle.manufacturer}</div>
-          <div><span className="text-muted-foreground">Cost:</span> {vehicle.cost_in_credits} credits</div>
-          <div><span className="text-muted-foreground">Max Speed:</span> {vehicle.max_atmosphering_speed}</div>
+          <div><span className="text-muted-foreground">Cost:</span> {formatNumber(vehicle.cost_in_credits)} credits</div>
+          <div><span className="text-muted-foreground">Max Speed:</span> {formatNumber(vehicle.max_atmosphering_speed)}</div>
+          <div><span className="text-muted-foreground">Crew:</span> {formatNumber(vehicle.crew)}</div>
+          <div><span className="text-muted-foreground">Passengers:</span> {formatNumber(vehicle.passengers)}</div>
         </div>
         <div className="flex flex-wrap gap-2 mt-3">
-          <Badge variant="outline">{vehicle.crew} crew</Badge>
-          <Badge variant="outline">{vehicle.passengers} passengers</Badge>
           <ExpandableBadge urls={vehicle.pilots} label="pilots" disabled={disableBadges} />
           <ExpandableBadge urls={vehicle.films} label="films" disabled={disableBadges} />
         </div>
@@ -194,7 +213,7 @@ function StarshipCard({ starship, disableBadges = false, onViewFull }: CardProps
           <Rocket className="w-5 h-5 text-purple-500" />
           {starship.name}
           {onViewFull && (
-            <button onClick={onViewFull} className="text-muted-foreground hover:text-foreground transition-colors" title="View full details">
+            <button onClick={onViewFull} className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors" title="View full details">
               <ExternalLink className="w-3.5 h-3.5" />
             </button>
           )}
@@ -205,12 +224,12 @@ function StarshipCard({ starship, disableBadges = false, onViewFull }: CardProps
         <div className="grid grid-cols-2 gap-2 text-sm">
           <div><span className="text-muted-foreground">Class:</span> {starship.starship_class}</div>
           <div><span className="text-muted-foreground">Hyperdrive:</span> {starship.hyperdrive_rating}</div>
-          <div><span className="text-muted-foreground">Cost:</span> {starship.cost_in_credits} credits</div>
-          <div><span className="text-muted-foreground">MGLT:</span> {starship.MGLT}</div>
+          <div><span className="text-muted-foreground">Cost:</span> {formatNumber(starship.cost_in_credits)} credits</div>
+          <div><span className="text-muted-foreground">MGLT:</span> {formatNumber(starship.MGLT)}</div>
+          <div><span className="text-muted-foreground">Crew:</span> {formatNumber(starship.crew)}</div>
+          <div><span className="text-muted-foreground">Passengers:</span> {formatNumber(starship.passengers)}</div>
         </div>
         <div className="flex flex-wrap gap-2 mt-3">
-          <Badge variant="outline">{starship.crew} crew</Badge>
-          <Badge variant="outline">{starship.passengers} passengers</Badge>
           <ExpandableBadge urls={starship.pilots} label="pilots" disabled={disableBadges} />
           <ExpandableBadge urls={starship.films} label="films" disabled={disableBadges} />
         </div>

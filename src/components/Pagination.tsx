@@ -45,14 +45,15 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
   const pages = getPageNumbers();
 
   return (
-    <div className="flex items-center justify-center gap-1 flex-wrap">
+    <div className="flex items-center justify-center gap-2 flex-wrap">
       <Button
         variant="outline"
-        size="sm"
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
+        className="gap-2 px-4 hover:shadow-[0_0_15px_rgba(234,179,8,0.5)] hover:border-yellow-500/50 active:shadow-[0_0_20px_rgba(234,179,8,0.7)] transition-all duration-200"
       >
-        <ChevronLeft className="w-4 h-4" />
+        <ChevronLeft className="w-5 h-5" />
+        Previous
       </Button>
 
       {pages.map((pageNum, idx) =>
@@ -64,7 +65,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
             variant={pageNum === currentPage ? "default" : "outline"}
             size="sm"
             onClick={() => onPageChange(pageNum)}
-            className="min-w-[2.5rem]"
+            className="min-w-[2.5rem] hover:shadow-[0_0_15px_rgba(234,179,8,0.5)] hover:border-yellow-500/50 active:shadow-[0_0_20px_rgba(234,179,8,0.7)] transition-all duration-200"
           >
             {pageNum}
           </Button>
@@ -73,11 +74,12 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
 
       <Button
         variant="outline"
-        size="sm"
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
+        className="gap-2 px-4 hover:shadow-[0_0_15px_rgba(234,179,8,0.5)] hover:border-yellow-500/50 active:shadow-[0_0_20px_rgba(234,179,8,0.7)] transition-all duration-200"
       >
-        <ChevronRight className="w-4 h-4" />
+        Next
+        <ChevronRight className="w-5 h-5" />
       </Button>
     </div>
   );

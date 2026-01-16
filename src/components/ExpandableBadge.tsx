@@ -104,7 +104,7 @@ export function ExpandableBadge({ urls, label, disabled = false }: ExpandableBad
             items.map(({ url, item }, i) => (
               <button
                 key={i}
-                className="text-muted-foreground hover:text-foreground hover:bg-accent/50 truncate max-w-[180px] text-left transition-all px-2 py-1 rounded-sm -ml-1"
+                className="cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent/50 truncate max-w-[180px] text-left transition-all px-2 py-1 rounded-sm -ml-1"
                 onClick={() => handleItemClick(url, item)}
               >
                 {getResourceDisplayName(item)}
